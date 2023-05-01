@@ -10,36 +10,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model EosAccount {
+  id            Int      @id @default(autoincrement())
+  transactionId BigInt?   @unique
+  accountName   String   @unique
+  status        String   @default("pending")
+  liquidBalance String?
+  createdAt     DateTime @default(now())
+  blockNumber   BigInt?
+  users         User[]
+}
+
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
-}
-
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  viewCount Int      @default(0)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
-}
-
-model EosAcount {
-  id        Int      @id @default(autoincrement())
-  transactionId BigInt
-  accountName String
-  status String
-  liquidBalance String
-  createdAt DateTime @default(now())
-  blockNumber BigInt
-}
-
-model UserName {
-  id        Int      @id @default(autoincrement())
-  userName String
+  id             Int       @id @default(autoincrement())
+  userName       String
+  eosAccount     EosAccount @relation(fields: [eosAccountName], references: [accountName])
+  eosAccountName String
 }

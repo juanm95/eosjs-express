@@ -2,59 +2,70 @@ import { PrismaClient, Prisma } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-const userData: Prisma.UserCreateInput[] = [
+const eosAccounts: Prisma.EosAccountCreateInput[] = [
   {
-    name: 'Alice',
-    email: 'alice@prisma.io',
-    posts: {
+    accountName: 'prismaticaly',
+    status: 'finalized',
+    blockNumber: 123456,
+    transactionId: 1234567890,
+    liquidBalance: '1.0000 EOS',
+    users: {
       create: [
         {
-          title: 'Join the Prisma Slack',
-          content: 'https://slack.prisma.io',
-          published: true,
+          userName: "XxprismaticalyxX"
         },
-      ],
-    },
+        {
+          userName: "--prismatically--"
+        }
+      ]
+    }
   },
   {
-    name: 'Nilu',
-    email: 'nilu@prisma.io',
-    posts: {
+    accountName: 'eosfan121212',
+    status: 'pending',
+    blockNumber: 123456,
+    transactionId: 1234567892,
+    liquidBalance: '0.0000 EOS',
+    users: {
       create: [
         {
-          title: 'Follow Prisma on Twitter',
-          content: 'https://www.twitter.com/prisma',
-          published: true,
-        },
-      ],
-    },
+          userName: "eosfan121212"
+        }
+      ]
+    }
   },
   {
-    name: 'Mahmoud',
-    email: 'mahmoud@prisma.io',
-    posts: {
+    accountName: 'moneybags123',
+    status: 'pending',
+    blockNumber: 123457,
+    transactionId: 1234567990,
+    liquidBalance: '12.0000 EOS',
+    users: {
       create: [
         {
-          title: 'Ask a question about Prisma on GitHub',
-          content: 'https://www.github.com/prisma/prisma/discussions',
-          published: true,
+          userName: "$moneybags$"
         },
         {
-          title: 'Prisma on YouTube',
-          content: 'https://pris.ly/youtube',
+          userName: "$moneybags$"
         },
-      ],
-    },
+        {
+          userName: "$moneybags$"
+        },
+        {
+          userName: "$moneybags$"
+        }
+      ]
+    }
   },
 ]
 
 async function main() {
   console.log(`Start seeding ...`)
-  for (const u of userData) {
-    const user = await prisma.user.create({
-      data: u,
+  for (const e of eosAccounts) {
+    const account = await prisma.eosAccount.create({
+      data: e,
     })
-    console.log(`Created user with id: ${user.id}`)
+    console.log(`Created account with id: ${account.id}`)
   }
   console.log(`Seeding finished.`)
 }
