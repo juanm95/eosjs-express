@@ -8,6 +8,44 @@ export class PrismaDatabase {
         this.prisma = new PrismaClient();
     }
 
+    async createToken(token: Prisma.TokenCreateInput) {
+        await this.prisma.token.create({
+            data: token,
+          });
+    };
+
+    async updateToken(id: string, token: Prisma.TokenUpdateInput) {
+        await this.prisma.token.update({
+            where: {
+              id,
+            },
+            data: {
+                name: token.name,
+                description: token.description,
+                image: token.image,
+                ownerId: token.ownerId,
+            },
+          });
+    };
+
+    async getToken(id: string) {
+        const token = await this.prisma.token.findUnique({
+            where: {
+              id,
+            },
+          })
+        return token;
+    };
+
+    async getTokensByOwner(ownerId: string) {
+        const tokens = await this.prisma.token.findMany({
+            where: {
+              ownerId,
+            },
+          })
+        return tokens;
+    };
+
     async createEosAccount(eosAccountName: string, userName: string) {
         if (!nameCompliance(eosAccountName)) {
             throw new Error('Invalid EOS account name');

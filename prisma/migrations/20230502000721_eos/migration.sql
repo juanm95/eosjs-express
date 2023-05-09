@@ -1,12 +1,12 @@
 -- CreateTable
 CREATE TABLE "EosAccount" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "transactionId" BIGINT NOT NULL,
+    "transactionId" BIGINT,
     "accountName" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
-    "liquidBalance" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'pending',
+    "liquidBalance" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "blockNumber" BIGINT NOT NULL
+    "blockNumber" BIGINT
 );
 
 -- CreateTable

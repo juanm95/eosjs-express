@@ -12,7 +12,7 @@ datasource db {
 
 model EosAccount {
   id            Int      @id @default(autoincrement())
-  transactionId BigInt?   @unique
+  transactionId BigInt?  @unique
   accountName   String   @unique
   status        String   @default("pending")
   liquidBalance String?
@@ -22,8 +22,17 @@ model EosAccount {
 }
 
 model User {
-  id             Int       @id @default(autoincrement())
+  id             Int        @id @default(autoincrement())
   userName       String
   eosAccount     EosAccount @relation(fields: [eosAccountName], references: [accountName])
   eosAccountName String
+}
+
+model Token {
+  id          String  @id @default(cuid())
+  name        String
+  description String
+  image       String
+  ownerId     String
+  attributes  String?
 }
