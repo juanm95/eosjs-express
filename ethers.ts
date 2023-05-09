@@ -1,12 +1,12 @@
 import { APIClient, Action, PrivateKey, SignedTransaction, Transaction } from '@greymass/eosio';
-import { JsonRpcProvider } from 'ethers/providers';
+import { JsonRpcProvider } from 'ethers';
 
 export class BlockChain {
-    client;
+    provider: JsonRpcProvider;
     privateKey: PrivateKey;
     actor: string;
     constructor() {
-        this.client = new web3("https://api.testnet.evm.eosnetwork.com/").eth;
+        this.provider = new JsonRpcProvider("https://api.testnet.evm.eosnetwork.com/");
         this.privateKey = PrivateKey.from("5JtUScZK2XEp3g9gh7F8bwtPTRAkASmNrrftmx4AxDKD5K4zDnr"); // this is a test key that's visible in mandel-eosjs so don't panic.
         this.actor = "bobbobbobbob";
     }

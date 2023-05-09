@@ -12,6 +12,22 @@ const port = process.env.PORT;
 const prismaDatabase = new PrismaDatabase();
 const blockChain = new BlockChain();
 
+app.post('/v1/poap/create', async (req: Request, res: Response) => {
+  // Pass in name, description, image, creator id and store this in our DB
+});
+
+app.get('/v1/poap/get', async (req: Request, res: Response) => {
+  // Pass in id and return the POAP
+});
+
+app.post('/v1/poap/update', async (req: Request, res: Response) => {
+  // Pass in id and updated POAP
+});
+
+app.post('/v1/poap/mint', async (req: Request, res: Response) => {
+  // Pass in id and address and mint the POAP
+});
+
 app.get('/v1/info', async (req: Request, res: Response) => {
   try {
     const response = await blockChain.getInfo();
