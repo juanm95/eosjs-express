@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaDatabase } from './prismaDatabase';
-import { BlockChain } from './blockChain';
+import { Mint } from './mint';
 const prisma = new PrismaClient()
 
 dotenv.config();
@@ -10,7 +10,21 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT;
 const prismaDatabase = new PrismaDatabase();
-const blockChain = new BlockChain();
+const mint = new Mint();
+
+function stringToNumber(string: string): number {
+  return parseInt(string);
+}
+
+app.post('/v1/store', async (req: Request, res: Response) => {
+  try {
+    const ammount = req.query['amount'] as string;
+    const response = await mint.storeNumber(parseInt(ammount));
+    res.json(response);
+  } catch (error) {
+    res.json(`Error: ${error}`);
+  }
+});
 
 app.post('/v1/poap/create', async (req: Request, res: Response) => {
   // Pass in name, description, image, creator id and store this in our DB
@@ -28,32 +42,32 @@ app.post('/v1/poap/mint', async (req: Request, res: Response) => {
   // Pass in id and address and mint the POAP
 });
 
-app.get('/v1/info', async (req: Request, res: Response) => {
-  try {
-    const response = await blockChain.getInfo();
-    res.json(response);
-  } catch (error) {
-    res.json(`Error: ${error}`);
-  }
-});
+// app.get('/v1/info', async (req: Request, res: Response) => {
+//   try {
+//     const response = await blockChain.getInfo();
+//     res.json(response);
+//   } catch (error) {
+//     res.json(`Error: ${error}`);
+//   }
+// });
 
-app.post('/v1/block/account', async (req: Request, res: Response) => {
-  const response = await blockChain.createEosAccount();
+// app.post('/v1/block/account', async (req: Request, res: Response) => {
+//   const response = await blockChain.createEosAccount();
 
-  res.json(response);
-});
+//   res.json(response);
+// });
 
-app.get('/v1/block/account', async (req: Request, res: Response) => {
-  const accountAddress = req.query['accountAddress'] as string;
-  const account = await blockChain.getEosAccount(accountAddress);
-  res.json(account);
-});
+// app.get('/v1/block/account', async (req: Request, res: Response) => {
+//   const accountAddress = req.query['accountAddress'] as string;
+//   const account = await blockChain.getEosAccount(accountAddress);
+//   res.json(account);
+// });
 
-app.get('/v1/block/account/status', async (req: Request, res: Response) => {
-  const accountAddress = req.query['accountAddress'] as string;
-  const status = await blockChain.eosAccountIsFinalized(accountAddress);
-  res.json(status);
-});
+// app.get('/v1/block/account/status', async (req: Request, res: Response) => {
+//   const accountAddress = req.query['accountAddress'] as string;
+//   const status = await blockChain.eosAccountIsFinalized(accountAddress);
+//   res.json(status);
+// });
 
 app.get('/v1/wallet', async (req: Request, res: Response) => {
   const accountName = req.query['accountName'] as string;
