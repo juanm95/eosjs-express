@@ -13,14 +13,14 @@ interface MintContractInterface {
 const address = "0xb7902FeB3e4696c33dB8C97d1774027De4041abA";
 
 export class Mint {
-    provider: AbstractProvider;
+    provider: JsonRpcProvider;
     privateKey: string;
     contract: Contract;
     wallet: Wallet;
     readOnlyContract: Contract;
 
     constructor() {
-        this.provider =  new JsonRpcProvider("https://api.testnet.evm.eosnetwork.com/");
+        this.provider =  new JsonRpcProvider("https://api.testnet.evm.eosnetwork.com/", undefined, { batchMaxCount: 1 });
         this.privateKey = "a84d996681c109f99a6b5c559a86a2df94ab138ccbcf409cfd37d262050926df";
         this.wallet = new Wallet(this.privateKey, this.provider);
         this.readOnlyContract = new Contract(address, storageAbi, this.provider);
@@ -29,20 +29,27 @@ export class Mint {
 
     async storeNumber(value: number) {
         try {
-            const blockNumber = await this.provider.getBlockNumber();
-            const retrieve = await this.readOnlyContract.retrieve();
-            const deployedCode = this.contract.getDeployedCode();
-            const transaction: TransactionResponse = await this.contract.store(value);
-            const filter: DeferredTopicFilter = this.contract.filters.Stored(this.wallet.address);
-            this.contract.once(filter, (from, to, amount, event) => {
-                console.log(`from: ${from}, to: ${to}, amount: ${amount}, event: ${event}`);
-            });
+            const transaction: TransactionResponse = await this.contract.store(value); // this is what I'm actually trying to do
+            // const filter: DeferredTopicFilter = this.contract.filters.Stored(this.wallet.address);
+            // this.contract.once(filter, (from, to, amount, event) => {
+            //     console.log(`from: ${from}, to: ${to}, amount: ${amount}, event: ${event}`);
+            // });
             return transaction;
         } catch(error) {
             console.log(error);
             return null;
         }
     };
+
+    async getNumber() {
+        try {
+            const value = await this.readOnlyContract.retrieve();
+            return value;
+        } catch(error) {
+            console.log(error);
+            return null;
+        }
+    }
 
     async mintTokenInstance(userId: number, tokenId: string) {
     };

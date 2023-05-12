@@ -26,6 +26,16 @@ app.post('/v1/store', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/v1/store', async (req: Request, res: Response) => {
+  try {
+    const response = await mint.getNumber();
+    res.json(response);
+  } catch (error) {
+    console.log(error);
+    res.json(`Error: ${error}`);
+  }
+});
+
 app.post('/v1/poap/create', async (req: Request, res: Response) => {
   // Pass in name, description, image, creator id and store this in our DB
 });
@@ -41,6 +51,8 @@ app.post('/v1/poap/update', async (req: Request, res: Response) => {
 app.post('/v1/poap/mint', async (req: Request, res: Response) => {
   // Pass in id and address and mint the POAP
 });
+
+app.post('/v1/poap/foruser', async (req: Request, res: Response) => {});
 
 // app.get('/v1/info', async (req: Request, res: Response) => {
 //   try {
