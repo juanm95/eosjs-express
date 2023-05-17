@@ -1,14 +1,6 @@
-import { APIClient, Action, PrivateKey, SignedTransaction, Transaction } from '@greymass/eosio';
-import { getDefaultProvider, Contract, Wallet, JsonRpcProvider } from 'ethers';
+import { Contract, Wallet, JsonRpcProvider } from 'ethers';
 import storageAbi from './storage.abi.json';
-import type { AbstractProvider, TransactionResponse, Filter, DeferredTopicFilter } from 'ethers';
-
-interface MintContractInterface {
-    name: string;
-    description: string;
-    image: string;
-    ownerId: string;
-}
+import type { TransactionResponse } from 'ethers';
 
 const address = "0xb7902FeB3e4696c33dB8C97d1774027De4041abA";
 
@@ -29,7 +21,7 @@ export class Mint {
 
     async storeNumber(value: number) {
         try {
-            const transaction: TransactionResponse = await this.contract.store(value);
+            const transaction: TransactionResponse = await this.contract.store(value); // store is the name of a method on the ABI.
             
             return await transaction.wait();
         } catch(error) {
@@ -47,7 +39,4 @@ export class Mint {
             return null;
         }
     }
-
-    async mintTokenInstance(userId: number, tokenId: string) {
-    };
 }
