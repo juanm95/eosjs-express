@@ -3,6 +3,9 @@ import dotenv from 'dotenv';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaDatabase } from './prismaDatabase';
 import { Mint } from './mint';
+import multer from 'multer';
+import fs from 'fs';
+import "./bigintJson";
 const prisma = new PrismaClient()
 
 dotenv.config();
@@ -12,12 +15,40 @@ const port = process.env.PORT;
 const prismaDatabase = new PrismaDatabase();
 const mint = new Mint();
 
+const storage = multer.diskStorage({
+  destination: function (_req, _file, cb) {
+    cb(null, 'uploads/'); // Destination folder for storing the files
+  },
+  filename: function (_req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+const upload = multer({ storage: storage });
+
 function stringToNumber(string: string): number {
   return parseInt(string);
 }
 
+app.get('/', async (req: Request, res: Response) => {
+  res.sendFile(__dirname + "/form.html");
+});
+
+app.post('/v1/image/upload', upload.single('image'), async (req: Request, res: Response) => {
+  if (req && req.file) {
+    try {
+      res.status(201).json({
+        url: "https://cdn-images-1.medium.com/max/800/1*5FNuSa1b6gVd70NmZQmu7Q.png"
+      });
+    } catch (error) {
+      res.status(500).send("Internal server error");
+    }
+  }
+  res.status(400).send("Bad request");
+});
+
 app.post('/v1/store', async (req: Request, res: Response) => {
   try {
+    req.query
     const ammount = req.query['amount'] as string;
     const response = await mint.storeNumber(parseInt(ammount));
     res.json(response);

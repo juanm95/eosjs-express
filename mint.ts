@@ -29,12 +29,9 @@ export class Mint {
 
     async storeNumber(value: number) {
         try {
-            const transaction: TransactionResponse = await this.contract.store(value); // this is what I'm actually trying to do
-            // const filter: DeferredTopicFilter = this.contract.filters.Stored(this.wallet.address);
-            // this.contract.once(filter, (from, to, amount, event) => {
-            //     console.log(`from: ${from}, to: ${to}, amount: ${amount}, event: ${event}`);
-            // });
-            return transaction;
+            const transaction: TransactionResponse = await this.contract.store(value);
+            
+            return await transaction.wait();
         } catch(error) {
             console.log(error);
             return null;
